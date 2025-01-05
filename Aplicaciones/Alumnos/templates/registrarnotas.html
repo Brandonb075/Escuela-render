@@ -1,0 +1,26 @@
+{% extends "plantilla.html" %}
+
+{% block contenido %}
+<h1>Registrar Calificaciones - Curso: {{ curso.nombre }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="evaluacion">Nombre de la Evaluación</label>
+        <input type="text" name="evaluacion" id="evaluacion" class="form-control" required placeholder="Ej. Parcial 1, Tarea 2">
+    </div>
+    
+    <h3>Estudiantes</h3>
+    <div class="list-group">
+        {% for estudiante in estudiantes %}
+        <div class="list-group-item">
+            <span>{{ estudiante.nombre }}</span>
+            <input type="number" name="calificacion_{{ estudiante.id }}" min="0" max="10" step="0.1" class="form-control w-25" placeholder="Nota (0-10)" required>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <button type="submit" class="btn btn-success mt-3">Guardar Calificaciones</button>
+</form>
+
+{% endblock %}

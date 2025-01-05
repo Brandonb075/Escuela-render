@@ -1,0 +1,24 @@
+{% extends 'plantilla.html' %}
+
+{% block contenido %}
+<h3>Registrar Asistencia para el Curso: {{ curso.nombre }}</h3>
+
+<form action="{% url 'TomarAsistencia' curso.id %}" method="post">
+    {% csrf_token %}
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" required><br><br>
+
+    <label><b>Lista de Estudiantes:</b></label><br>
+
+    {% for estudiante in estudiantes %}
+    <div>
+        <input type="checkbox" name="estado_{{ estudiante.id }}" id="estado_{{ estudiante.id }}">
+        <label for="estado_{{ estudiante.id }}">{{ estudiante.nombre }} (Cédula: {{ estudiante.cedula }})</label>
+    </div>
+    {% endfor %}
+    <br>
+    <button type="submit" class="btn btn-success">Registrar Asistencia</button>
+    <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'ListadoCurso' %}'">Cancelar</button>
+</form>
+
+{% endblock %}

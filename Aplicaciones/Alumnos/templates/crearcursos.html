@@ -1,0 +1,83 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<form action="{% url 'AgregarCurso' %}" id="frm_nuevo_curso" method="post">
+    <h3>Agregar Curso:</h3>
+    {% csrf_token %}
+    <br>
+
+    <!-- Nombre del curso -->
+    <label for="txt_nombre" class="form-label"><b>Nombre del Curso:</b></label>
+    <input type="text" class="form-control" name="txt_nombre" id="txt_nombre" required>
+    <br>
+
+    <!-- Descripción del curso -->
+    <label for="txt_descripcion" class="form-label"><b>Descripción:</b></label>
+    <input type="text" class="form-control" name="txt_descripcion" id="txt_descripcion" required>
+    <br>
+
+    <!-- Docente -->
+    <label for="txt_docente" class="form-label"><b>Docente:</b></label>
+    <select class="form-select" name="txt_docente" id="txt_docente" required>
+        <option value="">Seleccione un docente</option>
+        {% for docente in docentes %}
+            <option value="{{ docente.id }}">{{ docente.nombre }}</option>
+        {% endfor %}
+    </select>
+    <br>
+
+    <!-- Buscador de estudiantes -->
+    <label for="buscar_estudiantes" class="form-label"><b>Buscar Estudiantes por Cédula:</b></label>
+    <div class="input-group">
+        <input type="text" class="form-control" id="buscar_estudiantes" placeholder="Ingrese la cédula">
+        <button type="button" class="btn btn-primary" id="btn_buscar">Buscar</button>
+    </div>
+    <br>
+
+    <!-- Lista de estudiantes (se actualizará con JavaScript) -->
+    <div id="lista_estudiantes">
+        {% for estudiante in estudiantes %}
+            <div>
+                <input type="checkbox" class="form-check-input" name="txt_estudiantes" value="{{ estudiante.id }}" id="estudiante_{{ estudiante.id }}">
+                <label for="estudiante_{{ estudiante.id }}" class="form-check-label">{{ estudiante.nombre }} (Cédula: {{ estudiante.cedula }})</label>
+            </div>
+        {% endfor %}
+    </div>
+    <br>
+
+    <!-- Botones de acción -->
+    <button type="submit" class="btn btn-success">Guardar</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'ListadoCurso' %}'">Cancelar</button>
+</form>
+
+<script>
+    document.getElementById('btn_buscar').addEventListener('click', function() {
+        const query = document.getElementById('buscar_estudiantes').value;
+
+        // Realizar una solicitud AJAX
+        fetch("{% url 'buscar_estudiantes' %}?q=" + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                // Limpiar la lista actual
+                const listaEstudiantes = document.getElementById('lista_estudiantes');
+                listaEstudiantes.innerHTML = '';
+
+                // Insertar los resultados de búsqueda
+                if (data.estudiantes.length > 0) {
+                    data.estudiantes.forEach(estudiante => {
+                        const estudianteDiv = document.createElement('div');
+                        estudianteDiv.innerHTML = `
+                            <input type="checkbox" class="form-check-input" name="txt_estudiantes" value="${estudiante.id}" id="estudiante_${estudiante.id}">
+                            <label for="estudiante_${estudiante.id}" class="form-check-label">${estudiante.nombre} (Cédula: ${estudiante.cedula})</label>
+                        `;
+                        listaEstudiantes.appendChild(estudianteDiv);
+                    });
+                } else {
+                    listaEstudiantes.innerHTML = '<p>No se encontraron estudiantes.</p>';
+                }
+            })
+            .catch(error => console.error('Error al buscar estudiantes:', error));
+    });
+</script>
+{% endblock %}

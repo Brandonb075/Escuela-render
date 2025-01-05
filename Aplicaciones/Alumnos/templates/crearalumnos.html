@@ -1,0 +1,59 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<h3>Agregar Nuevo Estudiante:</h3>
+
+{% if error_message %}
+<div class="alert alert-danger" role="alert">
+    {{ error_message }}
+</div>
+{% endif %}
+
+<form action="{% url 'AgregarAlumno' %}" id="frm_nuevo_estudiante" method="post">
+    {% csrf_token %}
+    <label for="txt_nombre" class="form-label"><b>Nombre:</b></label>
+    <input type="text" class="form-control" name="txt_nombre" id="txt_nombre" value="{{ nombre|default:'' }}">
+    <br>
+    <label for="txt_cedula" class="form-label"><b>Cédula:</b></label>
+    <input type="text" class="form-control" name="txt_cedula" id="txt_cedula" value="{{ cedula|default:'' }}">
+    <br>
+    <label for="txt_email" class="form-label"><b>Correo Electrónico:</b></label>
+    <input type="email" class="form-control" name="txt_email" id="txt_email" value="{{ email|default:'' }}">
+    <br>
+    <button type="submit" class="btn btn-success">Guardar</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'ListadoAlumno' %}'">Cancelar</button>
+</form>
+<script>
+    $("#frm_nuevo_estudiante").validate({
+        rules: {
+            "txt_cedula": {
+                required: true,
+                minlength: 10,
+                maxlength: 10,
+                cedula1: true
+            },
+            "txt_nombre": {
+                required: true,
+                letras: true
+            },
+            "txt_email": {
+                required: true
+            }
+        },
+        messages:{
+            "txt_cedula":{
+                required:"Por favor ingrese el numero de cedula",
+                minlenght:"la cedula debe tener al menos 10 digitos",
+                maxlenght:"la cedula no puede tener mas de 10 digitos",
+                cedula1:"la cedula no es correcta",
+            },
+            "txt_nombre": {
+                required: "ingrese su nombre"
+            },
+            "txt_email": {
+                required: "ingrese su correo"
+            }
+        }        
+    });
+</script>
+{% endblock %}

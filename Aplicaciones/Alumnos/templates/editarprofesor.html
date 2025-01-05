@@ -1,0 +1,60 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<h3>Editar Profesor:</h3>
+
+{% if error_message %}
+<div class="alert alert-danger" role="alert">
+    {{ error_message }}
+</div>
+{% endif %}
+
+<form action="{% url 'EditarProfesor' profesores.id %}" id="frm_editar_profesor" method="post">
+    {% csrf_token %}
+    <label for="txt_nombre" class="form-label"><b>Nombre:</b></label>
+    <input type="text" class="form-control" name="txt_nombre" id="txt_nombre" value="{{ profesores.nombre|default:'' }}">
+    <br>
+    <label for="txt_cedula" class="form-label"><b>Cédula:</b></label>
+    <input type="text" class="form-control" name="txt_cedula" id="txt_cedula" value="{{ profesores.cedula|default:'' }}">
+    <br>
+    <label for="txt_email" class="form-label"><b>Correo Electrónico:</b></label>
+    <input type="email" class="form-control" name="txt_email" id="txt_email" value="{{ profesores.correo|default:'' }}">
+    <br>
+    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+    &nbsp;&nbsp;&nbsp;&nbsp;
+    <button type="button" class="btn btn-danger" onclick="window.location.href='{% url 'ListadoAlumno' %}'">Cancelar</button>
+</form>
+
+<script>
+    $("#frm_editar_estudiante").validate({
+        rules: {
+            "txt_cedula": {
+                required: true,
+                minlength: 10,
+                maxlength: 10,
+                cedula1: true
+            },
+            "txt_nombre": {
+                required: true,
+                letras: true
+            },
+            "txt_email": {
+                required: true
+            }
+        },
+        messages: {
+            "txt_cedula": {
+                required: "Por favor ingrese el número de cédula",
+                minlength: "La cédula debe tener al menos 10 dígitos",
+                maxlength: "La cédula no puede tener más de 10 dígitos",
+                cedula1: "La cédula no es correcta"
+            },
+            "txt_nombre": {
+                required: "Ingrese su nombre"
+            },
+            "txt_email": {
+                required: "Ingrese su correo"
+            }
+        }
+    });
+</script>
+{% endblock %}

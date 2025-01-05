@@ -1,0 +1,35 @@
+{% extends "./plantilla.html" %}
+{% block contenido %}
+<h3>Listado de Profesores</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Nombre</th>
+            <th>Cédula</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for profesores in profesores %}
+        <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ profesores.nombre }}</td>
+            <td>{{ profesores.cedula }}</td>
+            <td>{{ profesores.email}}</td>
+            <td>
+                <a href="{% url 'EditarProfesor' profesores.id %}" class="btn btn-warning btn-sm">Editar</a>
+                <button class="btn btn-danger btn-sm mx-1" onclick="showConfirmModal('{% url 'EliminarProfesor' profesores.id %}')">
+                    Eliminar
+                </button>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6" class="text-center">No hay profesores registrados.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

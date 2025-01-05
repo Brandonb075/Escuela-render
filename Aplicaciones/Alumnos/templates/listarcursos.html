@@ -1,0 +1,45 @@
+{% extends "./plantilla.html" %}
+
+{% block contenido %}
+<h3>Listado de Cursos:</h3>
+
+<!-- Verificar si hay cursos -->
+{% if cursos %}
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Curso</th>
+                <th>Docente</th>
+                <th>Estudiantes</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+                <tr>
+                    <td>{{ curso.nombre }}</td>
+                    <td>{{ curso.docente.nombre }}</td>
+                    <td>
+                        {% for estudiante in curso.estudiantes.all %}
+                            {{ estudiante.nombre }} ({{ estudiante.cedula }})<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <!-- Botones de acción -->
+                        <a href="{% url 'TomarAsistencia' curso.id %}" class="btn ">Asistencia</a>
+                        <a href="{% url 'InformeAsistencias' curso.id %}" class="btn btn-info">Informe de Asistencias</a>
+                        <a href="{% url 'RegistrarNotas' curso.id %}" class="btn ">Registrar Notas</a>
+                        <a href="{% url 'InformeNotas' curso.id %}" class="btn btn-info">Informe de Notas</a>
+                        <a href="{% url 'EditarCurso' curso.id %}" class="btn btn-warning">Editar</a>
+                        <button class="btn btn-danger btn-sm mx-1" onclick="showConfirmModal('{% url 'EliminarCurso' curso.id %}')">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No hay cursos disponibles.</p>
+{% endif %}
+{% endblock %}

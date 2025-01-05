@@ -1,0 +1,45 @@
+{% extends "plantilla.html" %}
+
+{% block contenido %}
+    <h1>Informe de Asistencias - {{ curso.nombre }}</h1>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Estudiante</th>
+                <th>Total Asistencias</th>
+                <th>Total Inasistencias</th>
+                <th>% Asistencia</th>
+                <th>% Inasistencia</th>
+                <th>Fechas Asistencias</th>
+                <th>Fechas Inasistencias</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in informe %}
+                <tr>
+                    <td>{{ item.estudiante.nombre }}</td>
+                    <td>{{ item.total_asistencias }}</td>
+                    <td>{{ item.total_inasistencias }}</td>
+                    <td>{{ item.porcentaje_asistencia|floatformat:2 }}%</td>
+                    <td>{{ item.porcentaje_inasistencia|floatformat:2 }}%</td>
+                    <td>
+                        {% for fecha in item.fechas_asistencias %}
+                            {{ fecha }}<br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for fecha in item.fechas_inasistencias %}
+                            {{ fecha }}<br>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'eliminar_informe_asistencias' curso.id %}" class="btn btn-danger" 
+       onclick="return confirm('¿Está seguro de que desea eliminar este informe de asistencias?');">
+       Eliminar Informe
+    </a>
+    <a href="{% url 'ListadoCurso' %}" class="btn btn-secondary">Volver</a>
+{% endblock %}

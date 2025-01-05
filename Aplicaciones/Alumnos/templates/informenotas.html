@@ -1,0 +1,37 @@
+{% extends "plantilla.html" %}
+
+{% block contenido %}
+<h1>Informe de Calificaciones - {{ curso.nombre }}</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Tareas</th>
+            <th>Promedio</th>
+            <th>Porcentaje</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in informe %}
+        <tr>
+            <td>{{ item.estudiante.nombre }}</td>
+            <td>
+                {% for tarea, nota in item.calificaciones %}
+                    {{ tarea }}: {{ nota }}<br> <!-- Muestra la tarea y la calificación -->
+                {% endfor %}
+            </td>            
+            <td>{{ item.promedio|floatformat:2 }}</td>
+            <td>{{ item.porcentaje|floatformat:2 }}%</td>
+            <td>{{ item.estado }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{% url 'eliminar_informe' curso.id %}" class="btn btn-danger" 
+       onclick="return confirm('¿Está seguro de que desea eliminar este informe?');">Eliminar Informe</a>
+<a href="{% url 'ListadoCurso' %}" class="btn btn-secondary">Volver</a>
+
+{% endblock %}
